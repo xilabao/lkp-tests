@@ -44,16 +44,14 @@ update_export_variables()
 
 	local tmp_job_script=$(mktemp -u /tmp/job-script.XXXXXXXXX)
 	cp $job_script $tmp_job_script
-
 	for var in $(echo "$cur_variables" | grep -v -f <(echo "$new_variables"))
 	do
 		local var_name=${var%%=*}
-		grep -q "export $var_name=" $tmp_job_script &&\
+		grep -q "export $var_name=" $tmp_job_script &&
 		sed -i "s/export $var_name=.*$/export $var/g" $tmp_job_script
 	done
-
-	mv $tmp_job_script "$opt_result_root/job.sh" &&
-	job_script="$opt_result_root/job.sh"
+	mv $tmp_job_script $RESULT_ROOT/job.sh &&
+	job_script=$RESULT_ROOT/job.sh
 }
 
 while getopts "o:" opt
@@ -71,18 +69,27 @@ job_script=$(readlink -e -v $job_script)
 
 set_local_variables
 
-if [ -z $opt_result_root ]; then
-	[ -n "$RESULT_ROOT" ] || {
-		echo "$0 exit due to RESULT_ROOT is not specified, you can use either"
-		echo "\"-o RESULT_ROOT\" or \"export RESULT_ROOT=<result_root>\" to specify it.\n"
-		usage
-	}
-
-	mkdir -p -m 02775 $RESULT_ROOT
-else
+eval $(grep "export result_root_template=" $job_script)
+if [[ $opt_result_root ]]; then
 	mkdir -p -m 02775 $opt_result_root
 	export RESULT_ROOT=$(readlink -e -v $opt_result_root)
+elif [[ $RESULT_ROOT ]]; then
+	mkdir -p -m 02775 $RESULT_ROOT
+elif [[ $result_root_template ]]; then
+	for i in {0..99}
+	do
+		export RESULT_ROOT=$(eval "echo $result_root_template")/$i
+		[[ -d $RESULT_ROOT ]] && continue
+		mkdir -p -m 02775 $RESULT_ROOT &&
+		echo "result_root: $RESULT_ROOT" &&
+		break
+	done
+else
+	echo "$0 exit due to RESULT_ROOT is not specified, you can use either"
+	echo "\"-o RESULT_ROOT\" or \"export RESULT_ROOT=<result_root>\" to specify it.\n"
+	usage
 fi
+unset result_root_template
 
 export TMP_RESULT_ROOT=$RESULT_ROOT
 export LKP_LOCAL_RUN=1
