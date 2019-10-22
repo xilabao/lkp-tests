@@ -16,6 +16,23 @@ EOF
 	exit 1
 }
 
+set_local_variables()
+{
+	export kconfig=${kconfig:-defconfig}
+	export commit=${commit:-$(uname -r)}
+
+	export compiler=$(grep -o "gcc version [0-9]*" /proc/version | awk '{print "gcc-"$NF}')
+	export compiler=${compiler:-default_compiler}
+	export rootfs=$(grep -m1 ^ID= /etc/os-release | awk -F= '{print $2}')
+	export rootfs=${rootfs:-default_rootfs}
+
+	export testbox=$HOSTNAME
+	export tbox_group=$HOSTNAME
+	export nr_cpu=$(grep -c ^processor /proc/cpuinfo)
+	local x=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+	export memory=$((x/1024/1024 + 1))G
+}
+
 update_export_variables()
 {
 	local cur_variables=$(export -p | sed -E 's/(export |declare -x )//g')
@@ -51,6 +68,8 @@ shift $(($OPTIND-1))
 job_script=$1
 [ -n "$job_script" ] || usage
 job_script=$(readlink -e -v $job_script)
+
+set_local_variables
 
 if [ -z $opt_result_root ]; then
 	[ -n "$RESULT_ROOT" ] || {
