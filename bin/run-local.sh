@@ -67,6 +67,9 @@ job_script=$1
 [ -n "$job_script" ] || usage
 job_script=$(readlink -e -v $job_script)
 
+shift
+mytest="${@}"
+
 set_local_variables
 
 eval $(grep "export result_root_template=" $job_script)
@@ -98,6 +101,7 @@ mkdir $TMP
 
 update_export_variables
 
+[[ $mytest ]] && sed -i "s/wrapper mytest/wrapper $mytest/" $job_script
 $job_script run_job
 
 $LKP_SRC/bin/post-run
