@@ -107,3 +107,5 @@ $job_script run_job
 
 $LKP_SRC/bin/post-run
 $LKP_SRC/bin/event/wakeup job-finished
+
+[[ $(realpath $RESULT_ROOT) != $(pwd) ]] && ln -sfn $RESULT_ROOT result_root
