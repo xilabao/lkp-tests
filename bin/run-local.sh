@@ -69,6 +69,7 @@ job_script=$(readlink -e -v $job_script)
 
 shift
 mytest="${@}"
+mytest=$(echo $mytest | sed 's/^.* -- //')
 
 set_local_variables
 
