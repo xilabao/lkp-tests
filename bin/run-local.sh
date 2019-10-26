@@ -69,7 +69,8 @@ job_script=$(readlink -e -v $job_script)
 
 shift
 mytest="${@}"
-mytest=$(echo $mytest | sed 's/^.* -- //')
+mytest=$(echo $mytest | sed 's/^.*-- //')
+[[ $mytest ]] && MY_TEST_CMDLINE=$mytest
 
 set_local_variables
 
@@ -102,7 +103,8 @@ mkdir $TMP
 
 update_export_variables
 
-[[ $mytest ]] && sed -i "s/wrapper mytest/wrapper $mytest/" $job_script
+set > $RESULT_ROOT/env
+
 $job_script run_job
 
 $LKP_SRC/bin/post-run
