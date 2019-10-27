@@ -12,6 +12,7 @@ Usage: run-local [-o RESULT_ROOT] JOB_SCRIPT
 
 options:
     -o  RESULT_ROOT         dir for storing all results
+    -s  TEST_SUITE          specify the test suite name
 EOF
 	exit 1
 }
@@ -54,10 +55,11 @@ update_export_variables()
 	job_script=$RESULT_ROOT/job.sh
 }
 
-while getopts "o:" opt
+while getopts "o:s:" opt
 do
 	case $opt in
 	o ) opt_result_root="$OPTARG" ;;
+	s ) opt_test_suite="$OPTARG" ;;
 	? ) usage ;;
 	esac
 done
@@ -70,7 +72,9 @@ job_script=$(readlink -e -v $job_script)
 shift
 mytest="${@}"
 mytest=$(echo $mytest | sed 's/^.*-- //')
+
 [[ $mytest ]] && MY_TEST_CMDLINE=$mytest
+[[ $opt_test_suite ]] || opt_test_suite="mytest"
 
 set_local_variables
 
