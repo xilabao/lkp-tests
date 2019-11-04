@@ -32,6 +32,7 @@ case "$lkp_command" in
 	'install')	lkp_command='install'		;;
 	'split')	lkp_command='split-job'		;;
 	'compile')	lkp_command='job2sh'		;;
+	'run-monitor')	lkp_command='run-local-monitor.sh'		;;
 	'run')
 		if echo "$*" | grep -e '\.sh$' -e '\.sh ' >/dev/null; then
 			lkp_command='run-local.sh'
