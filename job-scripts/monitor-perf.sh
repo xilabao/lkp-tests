@@ -17,7 +17,7 @@ export_top_env()
 	export memory=''
 	export NO_NETWORK=1
 	export LKP_LOCAL_RUN=1
-	export result_root_template="/lkp/result/\$opt_test_suite/default/\$testbox/\$rootfs/\$kconfig/\$compiler/\$commit"
+	export result_root_template="/lkp/result/mytest/\$opt_test_suite/\$testbox/\$rootfs/\$kconfig/\$compiler/\$commit"
 
 	[ -n "$LKP_SRC" ] ||
 	export LKP_SRC=/lkp/${user:-lkp}/src
