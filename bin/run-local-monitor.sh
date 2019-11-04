@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 [ -n "$LKP_SRC" ] || export LKP_SRC=$(dirname $(dirname $(readlink -e -v $0)))
 export TMP=/tmp/lkp
@@ -34,27 +34,6 @@ set_local_variables()
 	export memory=$((x/1024/1024 + 1))G
 }
 
-update_export_variables()
-{
-	local cur_variables=$(export -p | sed -E 's/(export |declare -x )//g')
-	local new_variables=$(bash -c "
-	. $job_script
-	export_top_env
-	export -p | sed -E 's/(export |declare -x )//g'
-	")
-
-	local tmp_job_script=$(mktemp -u /tmp/job-script.XXXXXXXXX)
-	cp $job_script $tmp_job_script
-	for var in $(echo "$cur_variables" | grep -v -f <(echo "$new_variables"))
-	do
-		local var_name=${var%%=*}
-		grep -q "export $var_name=" $tmp_job_script &&
-		sed -i "s/export $var_name=.*$/export $var/g" $tmp_job_script
-	done
-	mv $tmp_job_script $RESULT_ROOT/job.sh &&
-	job_script=$RESULT_ROOT/job.sh
-}
-
 while getopts "o:s:" opt
 do
 	case $opt in
@@ -76,9 +55,9 @@ mytest=$(echo $mytest | sed 's/^.*-- //')
 [[ $mytest ]] && export MY_TEST_CMDLINE=$mytest
 [[ $opt_test_suite ]] || opt_test_suite="default"
 
+. $job_script export_top_env
 set_local_variables
 
-eval $(grep "export result_root_template=" $job_script)
 if [[ $opt_result_root ]]; then
 	mkdir -p -m 02775 $opt_result_root
 	export RESULT_ROOT=$(readlink -e -v $opt_result_root)
@@ -98,17 +77,15 @@ else
 	echo "\"-o RESULT_ROOT\" or \"export RESULT_ROOT=<result_root>\" to specify it.\n"
 	usage
 fi
-unset result_root_template
 
 export TMP_RESULT_ROOT=$RESULT_ROOT
 export LKP_LOCAL_RUN=1
 rm -rf $TMP
 mkdir $TMP
 
-update_export_variables
-
 set > $RESULT_ROOT/env
 
+[[ -f $job_script ]] && cp $job_script $RESULT_ROOT/job.sh
 [[ -f $job_script.yaml ]] && cp $job_script.yaml $RESULT_ROOT/job.yaml
 
 $job_script run_job

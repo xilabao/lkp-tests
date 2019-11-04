@@ -31,8 +31,6 @@ run_job()
 	. $LKP_SRC/lib/job.sh
 	. $LKP_SRC/lib/env.sh
 
-	export_top_env
-
 	run_monitor $LKP_SRC/monitors/wrapper numa-meminfo
 	run_monitor $LKP_SRC/monitors/wrapper numa-vmstat
 	run_monitor $LKP_SRC/monitors/wrapper slabinfo
