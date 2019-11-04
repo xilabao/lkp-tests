@@ -12,7 +12,7 @@ Usage: run-local [-o RESULT_ROOT] JOB_SCRIPT
 
 options:
     -o  RESULT_ROOT         dir for storing all results
-    -s  TEST_SUITE          specify the test name, e.g. sleep_10
+    -s  TEST_NAME           specify the test name, e.g. sleep_10
 EOF
 	exit 1
 }
@@ -22,8 +22,9 @@ set_local_variables()
 	export kconfig=${kconfig:-defconfig}
 	export commit=${commit:-$(uname -r)}
 
+	export arch=$(uname -m)
 	export compiler=$(grep -o "gcc version [0-9]*" /proc/version | awk '{print "gcc-"$NF}')
-	export compiler=${compiler:-default_compiler}
+	export compiler=${compiler:-gcc}
 	export rootfs=$(grep -m1 ^ID= /etc/os-release | awk -F= '{print $2}')
 	export rootfs=${rootfs:-default_rootfs}
 
@@ -38,7 +39,7 @@ while getopts "o:s:" opt
 do
 	case $opt in
 	o ) opt_result_root="$OPTARG" ;;
-	s ) opt_test_suite="$OPTARG" ;;
+	s ) opt_test_name="$OPTARG" ;;
 	? ) usage ;;
 	esac
 done
@@ -53,7 +54,7 @@ mytest="${@}"
 mytest=$(echo $mytest | sed 's/^.*-- //')
 
 [[ $mytest ]] && export MY_TEST_CMDLINE=$mytest
-[[ $opt_test_suite ]] || opt_test_suite="default"
+[[ $opt_test_name ]] || opt_test_name="default"
 
 . $job_script export_top_env
 set_local_variables
@@ -86,7 +87,21 @@ mkdir $TMP
 set > $RESULT_ROOT/env
 
 [[ -f $job_script ]] && cp $job_script $RESULT_ROOT/job.sh
-[[ -f $job_script.yaml ]] && cp $job_script.yaml $RESULT_ROOT/job.yaml
+[[ -f $job_script.yaml ]] &&
+cp $job_script.yaml $RESULT_ROOT/job.yaml &&
+cat <<EOF >> $RESULT_ROOT/job.yaml
+
+test: $opt_test_name
+testbox: $testbox
+tbox_group: $tbox_group
+commit: $commit
+compiler: $compiler
+kconfig: $kconfig
+rootfs: $rootfs
+nr_cpu: $nr_cpu
+memory: $memory
+arch: $arch
+EOF
 
 $job_script run_job
 

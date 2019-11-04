@@ -15,7 +15,7 @@
 
 ## Run job with attached monitor.sh and replace "sleep 10" to your own benchmark commands
 ```
-# option "-s" could set the test suite name, and you could use "-o" to specify the result root directory
+# option "-s" could set the test name, and you could use "-o" to specify the result root directory
 
 # job-scripts/monitor doesn't contain perf
 [root@localhost lkp-tests]# lkp run-monitor -s sleep_10 job-scripts/monitor -- sleep 10
