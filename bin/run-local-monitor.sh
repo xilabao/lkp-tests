@@ -109,6 +109,8 @@ update_export_variables
 
 set > $RESULT_ROOT/env
 
+[[ -f $job_script.yaml ]] && cp $job_script.yaml $RESULT_ROOT/job.yaml
+
 $job_script run_job
 
 $LKP_SRC/bin/post-run
