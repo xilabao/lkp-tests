@@ -1,0 +1,8 @@
+#!/bin/sh
+
+trap "exit 0" SIGINT
+
+while true; do
+    sleep 1
+done
+true

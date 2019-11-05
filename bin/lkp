@@ -33,6 +33,7 @@ case "$lkp_command" in
 	'split')	lkp_command='split-job'		;;
 	'compile')	lkp_command='job2sh'		;;
 	'run-monitor')	lkp_command='run-local-monitor.sh'		;;
+	'stop-monitor')	pkill -SIGINT tsleep; exit 0			;;
 	'run')
 		if echo "$*" | grep -e '\.sh$' -e '\.sh ' >/dev/null; then
 			lkp_command='run-local.sh'

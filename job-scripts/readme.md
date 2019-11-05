@@ -13,7 +13,7 @@
 [root@localhost ~]# dnf install perf procps which time -y
 ```
 
-## Run job with attached monitor.sh and replace "sleep 10" to your own benchmark commands
+## Run job with monitor script and replace "sleep 10" to your own benchmark commands
 ```
 # option "-s" could set the test name, and you could use "-o" to specify the result root directory
 
@@ -29,6 +29,15 @@ wait for background processes: 1870 1867 1879 1874 1888 zoneinfo slabinfo proc-v
 result_root: /lkp/result/mytest/sleep_10/localhost.localdomain/fedora/defconfig/gcc-8/5.2.0-rc3-8e44c7840479/1
 2019-11-04 03:03:26  sleep 10
 wait for background processes: 2203 2206 2210 2214 2219 2225 slabinfo zoneinfo buddyinfo proc-vmstat meminfo perf-stat
+```
+
+## Run monitor script without benchmark
+```
+# Run lkp run-monitor
+[root@localhost lkp-tests]# lkp run-monitor job-scripts/monitor-perf
+
+# Open another terminal to stop monitors
+[root@localhost lkp-tests]# lkp stop-monitor
 ```
 
 ## Get the results

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -n "$LKP_SRC" ] || export LKP_SRC=$(dirname $(dirname $(readlink -e -v $0)))
 export TMP=/tmp/lkp
@@ -53,11 +53,14 @@ shift
 mytest_cmdline="${@}"
 mytest_cmdline=$(echo $mytest_cmdline | sed 's/^.*-- //')
 
-[[ $mytest_cmdline ]] && export MY_TEST_CMDLINE=$mytest_cmdline
-[[ $opt_test_name ]] || opt_test_name="default"
-
 . $job_script export_top_env
 set_local_variables
+
+[[ $testcase = "mytest" ]] && {
+	[[ $mytest_cmdline ]] && mytest="$LKP_SRC/bin/tsleep"
+	export MY_TEST_CMDLINE=$mytest_cmdline
+	[[ $opt_test_name ]] || opt_test_name="default"
+}
 
 if [[ $opt_result_root ]]; then
 	mkdir -p -m 02775 $opt_result_root
