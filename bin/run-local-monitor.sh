@@ -50,10 +50,10 @@ job_script=$1
 job_script=$(readlink -e -v $job_script)
 
 shift
-mytest="${@}"
-mytest=$(echo $mytest | sed 's/^.*-- //')
+mytest_cmdline="${@}"
+mytest_cmdline=$(echo $mytest_cmdline | sed 's/^.*-- //')
 
-[[ $mytest ]] && export MY_TEST_CMDLINE=$mytest
+[[ $mytest_cmdline ]] && export MY_TEST_CMDLINE=$mytest_cmdline
 [[ $opt_test_name ]] || opt_test_name="default"
 
 . $job_script export_top_env
@@ -91,7 +91,8 @@ set > $RESULT_ROOT/env
 cp $job_script.yaml $RESULT_ROOT/job.yaml &&
 cat <<EOF >> $RESULT_ROOT/job.yaml
 
-test: $opt_test_name
+mytest: $opt_test_name
+
 testbox: $testbox
 tbox_group: $tbox_group
 commit: $commit

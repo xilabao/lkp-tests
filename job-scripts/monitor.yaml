@@ -2,8 +2,6 @@ suite: mytest
 testcase: mytest
 category: benchmark
 
-mytest:
-
 numa-meminfo:
 numa-vmstat:
 slabinfo:

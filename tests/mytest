@@ -1,6 +1,5 @@
 #!/bin/sh
 # - mytest
-# - test
 
 . $LKP_SRC/lib/reproduce-log.sh
 
