@@ -2,7 +2,7 @@
 ## Prepare lkp environment (the feature hasn't been merged into the mainline)
 ```
 [root@localhost ~]# dnf install gcc make git -y
-[root@localhost ~]# git clone https://github.com/xilabao/lkp-tests.git && cd lkp-tests && git checkout run-local-script
+[root@localhost ~]# git clone https://github.com/xilabao/lkp-tests.git -b run-local-script
 [root@localhost lkp-tests]# make
 [root@localhost lkp-tests]# cd bin/event && make wakeup
 [root@localhost ~]# export PATH=$PATH:"/usr/local/bin/"
@@ -18,14 +18,14 @@
 # option "-s" could set the test name, and you could use "-o" to specify the result root directory
 
 # job-scripts/monitor doesn't contain perf
-[root@localhost lkp-tests]# lkp run-monitor -s sleep_10 job-scripts/monitor -- sleep 10
+[root@localhost ~]# lkp run-monitor -s sleep_10 monitor -- sleep 10
 result_root: /lkp/result/mytest/sleep_10/localhost.localdomain/fedora/defconfig/gcc-8/5.2.0-rc3-8e44c7840479/0
 2019-11-04 03:02:10  sleep 10
 wait for background processes: 1870 1867 1879 1874 1888 zoneinfo slabinfo proc-vmstat buddyinfo meminfo
 
 # job-scripts/monitor-perf contains 'perf-stat'
 # you can choose other perf tools from lkp-tests/monitors/perf-*, then update both monitor-perf and monitor-perf.yaml
-[root@localhost lkp-tests]# lkp run-monitor -s sleep_10 job-scripts/monitor-perf -- sleep 10
+[root@localhost ~]# lkp run-monitor -s sleep_10 monitor-perf -- sleep 10
 result_root: /lkp/result/mytest/sleep_10/localhost.localdomain/fedora/defconfig/gcc-8/5.2.0-rc3-8e44c7840479/1
 2019-11-04 03:03:26  sleep 10
 wait for background processes: 2203 2206 2210 2214 2219 2225 slabinfo zoneinfo buddyinfo proc-vmstat meminfo perf-stat
@@ -34,10 +34,10 @@ wait for background processes: 2203 2206 2210 2214 2219 2225 slabinfo zoneinfo b
 ## Run monitor script without benchmark
 ```
 # Run lkp run-monitor
-[root@localhost lkp-tests]# lkp run-monitor job-scripts/monitor-perf
+[root@localhost ~]# lkp run-monitor monitor-perf
 
 # Open another terminal to stop monitors
-[root@localhost lkp-tests]# lkp stop-monitor
+[root@localhost ~]# lkp stop-monitor
 ```
 
 ## Get the results

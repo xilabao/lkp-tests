@@ -47,7 +47,10 @@ done
 shift $(($OPTIND-1))
 job_script=$1
 [ -n "$job_script" ] || usage
-job_script=$(readlink -e -v $job_script)
+[[ $job_script =~ '/'  ]] || {
+	[[ -f $job_script  ]] || job_script=$LKP_SRC/job-scripts/$job_script
+}
+job_script=$(readlink -e -v $job_script) || exit 1
 
 shift
 mytest_cmdline="${@}"
