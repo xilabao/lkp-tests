@@ -57,7 +57,10 @@ mytest_cmdline=$(echo $mytest_cmdline | sed 's/^.*-- //')
 set_local_variables
 
 [[ $testcase = "mytest" ]] && {
-	[[ $mytest_cmdline ]] && mytest="$LKP_SRC/bin/tsleep"
+	[[ $mytest_cmdline ]] || {
+		killall -q $LKP_SRC/bin/event/wakeup
+		mytest_cmdline="$LKP_SRC/bin/event/wait default-monitors"
+	}
 	export MY_TEST_CMDLINE=$mytest_cmdline
 	[[ $opt_test_name ]] || opt_test_name="default"
 }

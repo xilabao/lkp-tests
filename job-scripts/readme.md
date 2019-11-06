@@ -10,7 +10,7 @@
 
 ## Install dependencies
 ```
-[root@localhost ~]# dnf install perf procps which time -y
+[root@localhost ~]# dnf install perf procps which time psmisc -y
 ```
 
 ## Run job with monitor script and replace "sleep 10" to your own benchmark commands
