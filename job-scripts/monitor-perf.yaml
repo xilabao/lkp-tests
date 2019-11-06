@@ -9,4 +9,4 @@ zoneinfo:
 buddyinfo:
 proc-vmstat:
 meminfo:
-perf-stat:
+perf-profile:

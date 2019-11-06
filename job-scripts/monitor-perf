@@ -38,7 +38,7 @@ run_job()
 	run_monitor $LKP_SRC/monitors/wrapper buddyinfo
 	run_monitor $LKP_SRC/monitors/wrapper proc-vmstat
 	run_monitor $LKP_SRC/monitors/wrapper meminfo
-	run_monitor $LKP_SRC/monitors/wrapper perf-stat
+	run_monitor $LKP_SRC/monitors/no-stdout/wrapper perf-profile
 
 	run_test $LKP_SRC/tests/wrapper mytest
 }
@@ -55,7 +55,7 @@ extract_stats()
 	$LKP_SRC/stats/wrapper buddyinfo
 	$LKP_SRC/stats/wrapper proc-vmstat
 	$LKP_SRC/stats/wrapper meminfo
-	$LKP_SRC/stats/wrapper perf-stat
+	$LKP_SRC/stats/wrapper perf-profile
 
 	$LKP_SRC/stats/wrapper time mytest.time
 	$LKP_SRC/stats/wrapper dmesg
