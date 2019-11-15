@@ -36,6 +36,7 @@ run_job()
 	run_monitor $LKP_SRC/monitors/wrapper slabinfo
 	run_monitor $LKP_SRC/monitors/wrapper zoneinfo
 	run_monitor $LKP_SRC/monitors/wrapper buddyinfo
+	run_monitor $LKP_SRC/monitors/wrapper vmstat
 	run_monitor $LKP_SRC/monitors/wrapper proc-vmstat
 	run_monitor $LKP_SRC/monitors/wrapper meminfo
 
@@ -52,6 +53,7 @@ extract_stats()
 	$LKP_SRC/stats/wrapper slabinfo
 	$LKP_SRC/stats/wrapper zoneinfo
 	$LKP_SRC/stats/wrapper buddyinfo
+	$LKP_SRC/stats/wrapper vmstat
 	$LKP_SRC/stats/wrapper proc-vmstat
 	$LKP_SRC/stats/wrapper meminfo
 

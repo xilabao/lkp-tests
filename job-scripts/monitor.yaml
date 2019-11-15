@@ -7,5 +7,6 @@ numa-vmstat:
 slabinfo:
 zoneinfo:
 buddyinfo:
+vmstat:
 proc-vmstat:
 meminfo:
